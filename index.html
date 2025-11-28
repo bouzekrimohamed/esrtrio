@@ -284,18 +284,41 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-        function downloadBigBlue() {
-            Swal.fire({
-                title: 'BigBlue Pivot Launcher',
-                text: 'Téléchargement du lanceur sécurisé en cours...',
-                icon: 'success',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#21d4fd',
-                background: 'rgba(10,15,31,0.9)',
-                color: '#fff'
-            });
-            window.location.href = "https://github.com/bouzekrimohamed/bigblueexe/releases/latest/download/Launch_BigBlue.bat";
+		function downloadBigBlue() {
+    const link1 = "https://metabase.internal.bigblue.co/public/question/809de840-004e-4bd7-b508-0ec9d176b973?Merchant=&Not_merchant=FROF";
+    const link2 = "https://metabase.internal.bigblue.co/public/question/809de840-004e-4bd7-b508-0ec9d176b973?Merchant=FROF&Not_merchant=";
+    const downloadLink = "https://github.com/bouzekrimohamed/bigblueexe/releases/latest/download/Launch_BigBlue.bat";
+
+    // 1er lien → ouvert au 1er clic
+    window.open(link1, "_blank");
+
+    // Téléchargement du .bat
+    const a = document.createElement('a');
+    a.href = downloadLink;
+    a.download = "Launch_BigBlue.bat";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    // Popup Swal
+    Swal.fire({
+        title: 'BigBlue Pivot Launcher',
+        text: 'Le lanceur a été téléchargé. Cliquez sur OK pour ouvrir le deuxième rapport.',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#21d4fd',
+        background: 'rgba(10,15,31,0.9)',
+        color: '#fff'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // 2ᵉ lien → ouvert AU CLIC SUR OK
+            window.open(link2, "_blank");
         }
+    });
+}
+
+
+
     </script>
 </body>
 </html>
