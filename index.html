@@ -191,6 +191,39 @@
         @keyframes footerFloat {
             50% { transform: translateZ(10px); }
         }
+		/* ====== SWEETALERT CUSTOM BUTTON LIST ====== */
+.bb-actions{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin-top:10px;
+}
+.bb-actions button{
+    width:100%;
+    padding:14px 14px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.25);
+    background: rgba(255,255,255,.08);
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    box-shadow: 0 0 18px rgba(33, 212, 253, .15);
+}
+.bb-actions button:hover{
+    transform: translateY(-2px);
+    background: rgba(255,255,255,.12);
+    box-shadow: 0 0 24px rgba(192, 132, 252, .25);
+}
+.bb-actions button:active{
+    transform: translateY(0px);
+}
+.bb-hint{
+    margin-top:10px;
+    font-size:.95em;
+    color:#b0d4ff;
+}
+
     </style>
 </head>
 <body>
@@ -224,9 +257,11 @@
                 <img src="cabaia.png" alt="Cabaïa">
             </a>
             <!-- BigBlue -->
-            <div class="card" onclick="downloadBigBlue()">
-                <img src="bigblue.png" alt="BigBlue">
-            </div>
+            <!-- BigBlue -->
+<div class="card" onclick="openBigBlueMenu()">
+    <img src="bigblue.png" alt="BigBlue">
+</div>
+
         </div>
     </main>
     <footer>
@@ -284,38 +319,77 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-		function downloadBigBlue() {
-    const link1 = "https://metabase.internal.bigblue.co/public/question/809de840-004e-4bd7-b508-0ec9d176b973?Merchant=&Not_merchant=FROF";
-    const link2 = "https://metabase.internal.bigblue.co/public/question/809de840-004e-4bd7-b508-0ec9d176b973?Merchant=FROF&Not_merchant=";
-    const downloadLink = "https://github.com/bouzekrimohamed/bigblueexe/releases/latest/download/Launch_BigBlue.bat";
+		// ---- BigBlue Menu ----
+const BB_LINK_NON_FROF = "https://metabase.internal.bigblue.co/public/question/809de840-004e-4bd7-b508-0ec9d176b973?Merchant=&Not_merchant=FROF";
+const BB_LINK_FROF     = "https://metabase.internal.bigblue.co/public/question/809de840-004e-4bd7-b508-0ec9d176b973?Merchant=FROF&Not_merchant=";
+const BB_APP_PIVOT     = "https://github.com/bouzekrimohamed/bigblueexe/releases/latest/download/Launch_BigBlue.bat";
 
-    // 1er lien → ouvert au 1er clic
-    window.open(link1, "_blank");
-
-    // Téléchargement du .bat
+function downloadFile(url, filename) {
     const a = document.createElement('a');
-    a.href = downloadLink;
-    a.download = "Launch_BigBlue.bat";
+    a.href = url;
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     a.remove();
+}
 
-    // Popup Swal
+function openBigBlueMenu() {
     Swal.fire({
-        title: 'BigBlue Pivot Launcher',
-        text: 'Le lanceur a été téléchargé. Cliquez sur OK pour ouvrir le deuxième rapport.',
-        icon: 'success',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#21d4fd',
-        background: 'rgba(10,15,31,0.9)',
-        color: '#fff'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // 2ᵉ lien → ouvert AU CLIC SUR OK
-            window.open(link2, "_blank");
+        title: 'BigBlue',
+        icon: 'info',
+        html: `
+            <div class="bb-actions">
+                <button id="bb-frof">Lien liste FROF</button>
+                <button id="bb-nonfrof">Lien liste NON FROF</button>
+                <button id="bb-app">Lien app_pivot</button>
+            </div>
+            <div class="bb-hint">Choisis une action 👇</div>
+        `,
+        showConfirmButton: false,
+        showCloseButton: true,
+        background: 'rgba(10,15,31,0.92)',
+        color: '#fff',
+        didOpen: () => {
+            const popup = Swal.getPopup();
+
+            popup.querySelector('#bb-frof').addEventListener('click', () => {
+                window.open(BB_LINK_FROF, "_blank");
+            });
+
+            popup.querySelector('#bb-nonfrof').addEventListener('click', () => {
+                window.open(BB_LINK_NON_FROF, "_blank");
+            });
+
+            popup.querySelector('#bb-app').addEventListener('click', () => {
+  Swal.fire({
+    title: 'Pivot launcher 🧩',
+    icon: 'info',
+    html: `
+      <div style="text-align:left; line-height:1.5">
+        Veuillez exécuter le <b>Pivot launcher</b> situé dans le partage :<br><br>
+        <div style="
+          padding:12px 14px;
+          border-radius:14px;
+          border:1px solid rgba(255,255,255,.18);
+          background: rgba(255,255,255,.08);
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+          word-break: break-word;
+          box-shadow: 0 0 18px rgba(33, 212, 253, .15);
+        ">Z:\\03 - Exploitation\\99 - informatique\\Ateliers Pivot BIGBLUE</div>
+        <div style="margin-top:10px; color:#b0d4ff;">Merci 🙏</div>
+      </div>
+    `,
+    confirmButtonText: 'OK ✅',
+    confirmButtonColor: '#21d4fd',
+    background: 'rgba(10,15,31,0.92)',
+    color: '#fff'
+  });
+});
+
         }
     });
 }
+
 
 
 
